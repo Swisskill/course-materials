@@ -19,8 +19,6 @@ import (
 )
 
 //TODO 3 : ADD closed ports; currently code only tracks open ports
-var openports []int // notice the capitalization here. access limited!
-var closports []int
 
 func worker(ports, results chan int) {
 	for p := range ports {
@@ -46,7 +44,8 @@ func worker(ports, results chan int) {
 //add a data structure that tells what each port does
 //
 func PortScanner() (int, int) {
-
+	var openports []int // notice the capitalization here. access limited!
+	var closports []int
 	ports := make(chan int, 100) // TODO 4: TUNE THIS FOR CODEANYWHERE / LOCAL MACHINE (am i doing this right?)
 	results := make(chan int)
 
