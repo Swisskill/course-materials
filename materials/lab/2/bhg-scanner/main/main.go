@@ -13,4 +13,5 @@ func main() {
 		ad = "scanme.nmap.org:"
 	}
 	scanner.PortScanner(portMap.ProtoMap(), ad)
+https: //uwyo.zoom.us/j/3077664366?pwd=dWlVTXdtZjcxVEttOWZvT2t1M1hoZz09
 }
