@@ -33,46 +33,15 @@ func worker(ports, results chan int, ad string) {
 	}
 }
 
-// for Part 5 - consider
-// easy: taking in a variable for the ports to scan (int? slice? ); a target address (string?)?
-// med: easy + return  complex data structure(s?) (maps or slices) containing the ports.
-// hard: restructuring code - consider modification to class/object
-// No matter what you do, modify scanner_test.go to align; note the single test currently fails
-//does this change this
 
-//let's take in a parameter for what ports we are scanning for
-//add a data structure that tells what each port does
-//
-/*
-	func main() {
-
-    // Println function is used to
-    // display output in the next line
-    fmt.Println("Enter Your First Name: ")
-
-    // var then variable name then variable type
-    var first string
-
-    // Taking input from user
-    fmt.Scanln(&first)
-    fmt.Println("Enter Second Last Name: ")
-    var second string
-    fmt.Scanln(&second)
-
-    // Print function is used to
-    // display output in the same line
-    fmt.Print("Your Full Name is: ")
-
-    // Addition of two string
-    fmt.Print(first + " " + second)
+func main() {
+	fmt.Println("Provide an address or type 'default' to use the default server")
+	fmtScanln(ad)
+	if ad == "default"{
+	ad = "scanme.nmap.org:"
+	return 0
 }
 
-	fmt.Println("Provide an address or type 'default' to use the default server")
-	var ad string := fmtScanln()
-	if ad == "default"{
-		ad = "scanme.nmap.org:"
-	}
-*/
 
 func PortScanner() (int, int) {
 
@@ -113,7 +82,16 @@ func PortScanner() (int, int) {
 	return len(openports), len(closports)
 	//return len(openports)
 	//return len(closports)
+	// for Part 5 - consider
+	// easy: taking in a variable for the ports to scan (int? slice? ); a target address (string?)?
+	// med: easy + return  complex data structure(s?) (maps or slices) containing the ports.
+	// hard: restructuring code - consider modification to class/object
+	// No matter what you do, modify scanner_test.go to align; note the single test currently fails
+	//does this change this
 
+	//let's take in a parameter for what ports we are scanning for
+	//add a data structure that tells what each port does
+	//
 	// TODO 6 : Return total number of ports scanned (number open, number closed);
 	//you'll have to modify the function parameter list in the defintion and the values in the scanner_test
 }
