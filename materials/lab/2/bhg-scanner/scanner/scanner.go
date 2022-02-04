@@ -20,9 +20,9 @@ import (
 
 //TODO 3 : ADD closed ports; currently code only tracks open ports
 
-func worker(ports, results chan int) {
+func worker(ports, results chan int, ad string) {
 	for p := range ports {
-		address := fmt.Sprintf("scanme.nmap.org:%d", p)
+		address := fmt.Sprintf("%s%d", ad, p)
 		conn, err := net.DialTimeout("tcp", address, 1*time.Second) // TODO 2 : REPLACE THIS WITH DialTimeout (before testing!)
 		if err != nil {
 			results <- 0
@@ -43,7 +43,39 @@ func worker(ports, results chan int) {
 //let's take in a parameter for what ports we are scanning for
 //add a data structure that tells what each port does
 //
+/*
+	func main() {
+
+    // Println function is used to
+    // display output in the next line
+    fmt.Println("Enter Your First Name: ")
+
+    // var then variable name then variable type
+    var first string
+
+    // Taking input from user
+    fmt.Scanln(&first)
+    fmt.Println("Enter Second Last Name: ")
+    var second string
+    fmt.Scanln(&second)
+
+    // Print function is used to
+    // display output in the same line
+    fmt.Print("Your Full Name is: ")
+
+    // Addition of two string
+    fmt.Print(first + " " + second)
+}
+
+	fmt.Println("Provide an address or type 'default' to use the default server")
+	var ad string := fmtScanln()
+	if ad == "default"{
+		ad = "scanme.nmap.org:"
+	}
+*/
+
 func PortScanner() (int, int) {
+
 	var openports []int // notice the capitalization here. access limited!
 	var closports []int
 	ports := make(chan int, 100) // TODO 4: TUNE THIS FOR CODEANYWHERE / LOCAL MACHINE (am i doing this right?)
