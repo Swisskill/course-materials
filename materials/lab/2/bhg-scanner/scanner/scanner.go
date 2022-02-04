@@ -74,7 +74,7 @@ func worker(ports, results chan int, ad string) {
 	}
 */
 
-func PortScanner() (int, int) {
+func PortScanner(protoMap map[int]string, ad string) (int, int) {
 
 	var openports []int // notice the capitalization here. access limited!
 	var closports []int
@@ -82,7 +82,7 @@ func PortScanner() (int, int) {
 	results := make(chan int)
 
 	for i := 0; i < cap(ports); i++ {
-		go worker(ports, results)
+		go worker(ports, results, ad)
 	}
 
 	go func() {
