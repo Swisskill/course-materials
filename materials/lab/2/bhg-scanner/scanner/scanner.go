@@ -50,7 +50,7 @@ func PortScanner(ad string, range1 int, range2 int) (int, int) {
 		}
 	}()
 
-	for i := range1; i < range2; i++ {
+	for i := range1; i <= range2; i++ {
 		port := <-results
 		if port != 0 {
 			openports = append(openports, port)
@@ -59,6 +59,9 @@ func PortScanner(ad string, range1 int, range2 int) (int, int) {
 			closports = append(closports, port)
 			//fmt.Printf("Port number %d is closed\n", i)
 		}
+	}
+	if len(openports) == 0 {
+		fmt.Println("Sorry. There are no open ports")
 	}
 
 	close(ports)
