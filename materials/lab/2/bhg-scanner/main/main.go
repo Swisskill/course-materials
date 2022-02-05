@@ -20,12 +20,12 @@ func main() {
 
 	for i := 0; i < 1; i++ {
 		fmt.Println("--------------------------------------------------------------")
-		fmt.Println(" Specify the first digit of range or type 'default' to use 0  ")
+		fmt.Println(" Specify the first digit of range")
 		fmt.Println("--------------------------------------------------------------")
 		fmt.Scanln(&range1)
 		fmt.Println("")
 		switch {
-		case range1 < 0:
+		case range1 <= 0:
 			fmt.Printf("The first digit can't be %d, it needs to be positive\n\n", range1)
 			i--
 		case range1 > 65506:
@@ -36,7 +36,7 @@ func main() {
 
 	for i := 0; i < 1; i++ {
 		fmt.Println("--------------------------------------------------------------")
-		fmt.Println(" Specify the second digit of range or type 'default' to use 0  ")
+		fmt.Println("Specify the second digit of range")
 		fmt.Println("--------------------------------------------------------------")
 		fmt.Scanln(&range2)
 		fmt.Println("")
