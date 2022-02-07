@@ -1,11 +1,16 @@
 // bhg-scanner/scanner.go modified from Black Hat Go > CH2 > tcp-scanner-final > main.go
 // Code : https://github.com/blackhat-go/bhg/blob/c27347f6f9019c8911547d6fc912aa1171e6c362/ch-2/tcp-scanner-final/main.go
 // License: {$RepoRoot}/materials/BHG-LICENSE
-// Useage: This is a port scanner. The steps for running are: cd workspace/course-materials/materials/lab/2/bhg-scanner/main
-//															  go build
-//															  time ./main
-// You can also test it by: cd workspace/course-materials/materials/lab/2/bhg-scanner/scanner
-//							go test
+// Useage: This is a port scanner.
+/*
+To run, you can either do
+        cd C:\Users\wrbra\Desktop\COSC\Cyber\course-materials\materials\lab\2\bhg-scanner\main\
+        go build
+        ./main
+    And then follow the prompts or
+        cd C:\Users\wrbra\Desktop\COSC\Cyber\course-materials\materials\lab\2\bhg-scanner\scanner
+        go test
+*/
 // Will Brant, 2/3/22
 // {TODO 1: FILL IN}
 
@@ -36,7 +41,7 @@ func worker(ports, results chan int, ad string) {
 func PortScanner(ad string, range1 int, range2 int) (int, int) {
 
 	var openports []int // notice the capitalization here. access limited!
-	var closports []int
+	var closports int
 	ports := make(chan int, 100) // TODO 4: TUNE THIS FOR CODEANYWHERE / LOCAL MACHINE (am i doing this right?)
 	results := make(chan int)
 
@@ -56,7 +61,7 @@ func PortScanner(ad string, range1 int, range2 int) (int, int) {
 			openports = append(openports, port)
 			//fmt.Printf("Port number %d is open\n", port)
 		} else {
-			closports = append(closports, port)
+			closports++ // = append(closports, port)
 			//fmt.Printf("Port number %d is closed\n", i)
 		}
 	}
@@ -72,7 +77,16 @@ func PortScanner(ad string, range1 int, range2 int) (int, int) {
 		fmt.Printf("%d %s\n", port, protoMap[port])
 
 	}
-	return len(openports), len(closports)
+	switch {
+	case len(openports) == 1:
+		fmt.Printf("There was %d open ports and %d closed ports\n", len(openports), closports)
+	case len(openports) == 0:
+		fmt.Printf("There were no open ports, but %d closed ports\n", closports)
+	case len(openports) > 1:
+		fmt.Printf("There were %d open ports and %d closed ports", len(openports), closports)
+	}
+
+	return len(openports), closports
 }
 
 //TODO 5 : Enhance the output for easier consumption, include closed ports
