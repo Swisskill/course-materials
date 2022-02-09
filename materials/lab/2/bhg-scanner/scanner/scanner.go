@@ -83,7 +83,7 @@ func PortScanner(ad string, range1 int, range2 int) (int, int) {
 	case len(openports) == 0:
 		fmt.Printf("There were no open ports, but %d closed ports\n", closports)
 	case len(openports) > 1:
-		fmt.Printf("There were %d open ports and %d closed ports", len(openports), closports)
+		fmt.Printf("There were %d open ports and %d closed ports\n", len(openports), closports)
 	}
 
 	return len(openports), closports
