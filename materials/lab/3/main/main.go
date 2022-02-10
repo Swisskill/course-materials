@@ -40,9 +40,15 @@ func main() {
 		fmt.Println("==== start ", host.IPString, "====")
 		h, _ := json.Marshal(host)
 		fmt.Println(string(h))
+<<<<<<< HEAD
 		fmt.Println("==== end ", host.IPString, "====")
 		fmt.Println("Press the Enter Key to continue.")
 		fmt.Scanln()
+=======
+		fmt.Println("==== end ",host.IPString,"====")
+		//fmt.Println("Press the Enter Key to continue.")
+		//fmt.Scanln()
+>>>>>>> 7dfb5912c2673375e7ba4b5ba3b9043737a55fdd
 	}
 
 	fmt.Printf("IP, Port\n")
