@@ -17,7 +17,7 @@ func main() {
 	os.Setenv("SHODAN_API_KEY", "gIiBqdKhe0Pl6yUkmplFnnp2HxK2befL")
 	if len(os.Args) != 2 {
 		fmt.Println(len(os.Args))
-		log.Fatalln("Usage: main <searchterm> | Please Redo Your Input")
+		log.Fatalln("Usage: main <searchterm>")
 	}
 	apiKey := os.Getenv("SHODAN_API_KEY")
 	s := shodan.New(apiKey)
