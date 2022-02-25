@@ -23,7 +23,7 @@ func main() {
 		fmt.Println("You will be asked go supply filters to search by. The available filters are")
 		fmt.Println("os:\ntimestamp:\nisp:\nasn:\nhostnames:\nlocation:\nip:\ndomains:\norg:\ndata:\nport:\nipstring\n")
 		fmt.Println("Furthermore, location can have a few different ways to search by. These include:")
-		fmt.Println("city\n region_code:\narea_code:\nlongitude:\ncountry_code3:\ncountry_name:\npostal_code:\ndma_code:\ncountry_code:\nlatitude:\n")
+		fmt.Println("city\nregion_code:\narea_code:\nlongitude:\ncountry_code3:\ncountry_name:\npostal_code:\ndma_code:\ncountry_code:\nlatitude:\n")
 		fmt.Println("Now notice the colon after every filter. You'll need to make sure you have those. An example:")
 		fmt.Println("city:Chicago or port:80\n------------------------------------------------------------------------\nIf you have any questions, please contact support at wbrant@uwyo.edu")
 		fmt.Println("------------------------------------------------------------------------\n")
@@ -51,7 +51,7 @@ func main() {
 		fmt.Println("\nPlease enter the number of pages you would like to view")
 		fmt.Scanln(&pag)
 		if ad < 1 {
-			fmt.Println("The minimum is page")
+			fmt.Println("The minimum is 1 page")
 			i--
 		}
 	}
