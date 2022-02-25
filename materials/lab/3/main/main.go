@@ -16,8 +16,8 @@ import (
 func main() {
 	os.Setenv("SHODAN_API_KEY", "gIiBqdKhe0Pl6yUkmplFnnp2HxK2befL")
 	var yes string
-	fmt.Println("Type Y for documentation on usage or press any key to continue")
-	fmt.Scan(&yes)
+	fmt.Println("Type Y for documentation on usage or press enter to continue")
+	fmt.Scanln(&yes)
 	if yes == "Y" {
 		fmt.Println("-------------------------Welcome to Shodan, Terminal Edition-------------------------")
 		fmt.Println("You will be asked go supply filters to search by. The available filters are")
@@ -25,7 +25,8 @@ func main() {
 		fmt.Println("Furthermore, location can have a few different ways to search by. These include:")
 		fmt.Println("city\n region_code:\narea_code:\nlongitude:\ncountry_code3:\ncountry_name:\npostal_code:\ndma_code:\ncountry_code:\nlatitude:\n")
 		fmt.Println("Now notice the colon after every filter. You'll need to make sure you have those. An example:")
-		fmt.Println("city:Chicago or port:80\n--------------------------------------------------\nIf you have any questions, please contact support at wbrant@uwyo.edu")
+		fmt.Println("city:Chicago or port:80\n------------------------------------------------------------------------\nIf you have any questions, please contact support at wbrant@uwyo.edu")
+		fmt.Println("------------------------------------------------------------------------\n")
 	}
 	var ad int
 	for i := 0; i < 1; i++ {
@@ -35,10 +36,11 @@ func main() {
 			fmt.Println("The minimum is 1 filter and the maximum is 12 filters.")
 			i--
 		}
+		fmt.Println("--------------------------------------------------")
 	}
 	var mySlic []string
 	var slicer string
-	fmt.Println("\nPlease enter your filters one at a time")
+	//fmt.Println("Please enter your filters one at a time\n")
 	for i := 0; i < ad; i++ {
 		fmt.Printf("Enter filter number %d:\n", i+1)
 		fmt.Scanln(&slicer)
@@ -53,13 +55,6 @@ func main() {
 			i--
 		}
 	}
-	//fmt.Print(mySlic)
-	/*
-		if len(os.Args) < 2 {
-			fmt.Println(len(os.Args))
-			log.Fatalln("Usage: main <searchterm> | You need to have at least 2 arguments (including main)")
-		}
-	*/
 
 	apiKey := os.Getenv("SHODAN_API_KEY")
 	s := shodan.New(apiKey)
@@ -78,15 +73,21 @@ func main() {
 	}
 
 	fmt.Printf("Host Data Dump\n")
-
+	ind := 0
 	for _, host := range hostSearch.Matches {
+		ind++
 		fmt.Println("==== start ", host.IPString, "====")
 		h, _ := json.Marshal(host)
 		fmt.Println(string(h))
 		fmt.Println("==== end ", host.IPString, "====")
-		fmt.Println("Press the Enter Key to continue.")
-		fmt.Scanln()
-
+		if ind != pag {
+			fmt.Printf("Press the Enter Key to continue to page %d\n", ind+1)
+			fmt.Scanln()
+		} else {
+			fmt.Println("Press the Enter Key to exit")
+			fmt.Scanln()
+			break
+		}
 	}
 
 	fmt.Printf("IP, Port\n")
