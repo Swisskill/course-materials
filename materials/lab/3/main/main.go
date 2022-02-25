@@ -59,13 +59,6 @@ func main() {
 		"Query Credits: %d\nScan Credits:  %d\n\n",
 		info.QueryCredits,
 		info.ScanCredits)
-	/*
-		var argus []string //this should store all our args for narrow searching
-		for i := 1; i < len(os.Args); i++ {
-			argus = append(argus, os.Args[1])
-		}
-	*/
-	println(mySlic[0])
 
 	hostSearch, err := s.HostSearch(mySlic)
 	if err != nil {
@@ -73,6 +66,7 @@ func main() {
 	}
 
 	fmt.Printf("Host Data Dump\n")
+
 	for _, host := range hostSearch.Matches {
 		fmt.Println("==== start ", host.IPString, "====")
 		h, _ := json.Marshal(host)
@@ -82,18 +76,6 @@ func main() {
 		fmt.Scanln()
 
 	}
-
-	/*
-		HEAD
-				fmt.Println("==== end ", host.IPString, "====")
-				fmt.Println("Press the Enter Key to continue.")
-				fmt.Scanln()
-		=======
-				fmt.Println("==== end ",host.IPString,"====")
-				//fmt.Println("Press the Enter Key to continue.")
-				//fmt.Scanln()
-		 7dfb5912c2673375e7ba4b5ba3b9043737a55fdd
-	*/
 
 	fmt.Printf("IP, Port\n")
 

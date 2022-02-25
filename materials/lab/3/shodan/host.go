@@ -42,9 +42,13 @@ type HostSearch struct {
 }
 
 func (s *Client) HostSearch(mySlic []string) (*HostSearch, error) {
-	res, err := http.Get(
-		fmt.Sprintf("%s/shodan/host/search?key=%s&query=%s", BaseURL, s.apiKey, mySlic[0]),
-	)
+
+	jazz := fmt.Sprintf("%s/shodan/host/search?key=%s&query=%s", BaseURL, s.apiKey, mySlic[0])
+	for i := 1; i < len(mySlic); i++ {
+		jazz = jazz + "+" + mySlic[i]
+	}
+	res, err := http.Get(jazz)
+
 	if err != nil {
 		return nil, err
 	}
