@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"wyoassign/wyoassign"
@@ -29,16 +28,17 @@ func main() {
 	http.ListenAndServe(":8080", router)
 
 	//Now we begin the TUI
-
-	var pass string
-	var useR string
-	fmt.Println("(a little note, the password is hardcoded in goofy slice. Just look through the file. Pretend it's in another location)")
-	fmt.Println("Please enter your username to continue\n")
-	fmt.Scanln(&useR)
-	if useR == "drmike" {
-		fmt.Println("---Welcome Dr Mike---\nPlease enter your password")
-	} else {
-		fmt.Println("Please enter your password")
-	}
+	/*
+		var pass string
+		var useR string
+		fmt.Println("(a little note, the password is hardcoded in goofy slice. Just look through the file. Pretend it's in another location)")
+		fmt.Println("Please enter your username to continue\n")
+		fmt.Scanln(&useR)
+		if useR == "drmike" {
+			fmt.Println("---Welcome Dr Mike---\nPlease enter your password")
+		} else {
+			fmt.Println("Please enter your password")
+		}
+	*/
 
 }
