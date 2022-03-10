@@ -122,24 +122,35 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 	// Possible TODO: Better Error Checking!
 	// Possible TODO: Better Logging
 	if r.FormValue("id") != "" {
-
-		for {
-			tmp := false
-			rand.Seed(time.Now().UnixNano())
-			randId := rand.Intn(1024)
-			for _, assign := range Assignments {
-				if assign.Id == randId {
-					tmp = true
+		/*
+			for {
+				tmp := false
+				rand.Seed(time.Now().UnixNano())
+				randId := rand.Intn(1024)
+				for _, assign := range Assignments {
+					if assign.Id == randId {
+						tmp = true
+					}
+				}
+				if tmp != true {
+					break
 				}
 			}
-			if tmp != true {
+		*/
+		params := mux.Vars(r)
+		for _, assignment := range Assignments {
+			paramI, _ := strconv.Atoi(params["id"])
+			if assignment.Id == paramI {
+				log.Printf("Sorry. Choose a different id please")
+				w.WriteHeader(http.StatusNotFound)
+				//json.NewEncoder(w).Encode(assignment)
 				break
 			}
 		}
 
 		//assignmnet.Id = r.FormValue("id")
 		//forming, _ := strconv.Atoi(r.FormValue("id")) //this line is stupid. Maybe it means the lines above don't work idk
-		assignmnet.Id = randId
+		assignmnet.Id, _ = strconv.Atoi(r.FormValue("id"))
 		assignmnet.Title = r.FormValue("title")
 		assignmnet.Description = r.FormValue("desc")
 		assignmnet.Points, _ = strconv.Atoi(r.FormValue("points"))
