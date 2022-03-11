@@ -117,6 +117,15 @@ func UpdateAssignment(w http.ResponseWriter, r *http.Request) {
 
 func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	for _, assignment := range Assignments {
+		check, _ := strconv.Atoi(r.FormValue("id"))
+		if assignment.Id == check {
+			log.Printf("Sorry. Choose a different id please")
+			w.WriteHeader(http.StatusNotFound)
+			//json.NewEncoder(w).Encode(assignment)
+			return
+		}
+	}
 	var assignmnet Assignment
 	r.ParseForm()
 	// Possible TODO: Better Error Checking!
@@ -137,16 +146,7 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		*/
-		params := mux.Vars(r)
-		for _, assignment := range Assignments {
-			paramI, _ := strconv.Atoi(params["id"])
-			if assignment.Id == paramI {
-				log.Printf("Sorry. Choose a different id please")
-				w.WriteHeader(http.StatusNotFound)
-				//json.NewEncoder(w).Encode(assignment)
-				break
-			}
-		}
+		//params := mux.Vars(r)
 
 		//assignmnet.Id = r.FormValue("id")
 		//forming, _ := strconv.Atoi(r.FormValue("id")) //this line is stupid. Maybe it means the lines above don't work idk
