@@ -127,7 +127,7 @@ func UpdateAssignment(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	if r.FormValue("password") != "mikeiscool" {
-		log.Printf("FAIL: incorrect or missing key!")
+		log.Printf("You have not entered the correct password")
 		w.WriteHeader(http.StatusBadRequest)
 		response := make(map[string]string)
 		response["status"] = "Wrong or missing key value"
