@@ -88,11 +88,12 @@ func DeleteAssignment(w http.ResponseWriter, r *http.Request) {
 	//if main.Pass != "mikeiscool" {
 	//	return
 	//} //this should implement a password function. Hopefully
+	log.Printf("Entering %s DELETE end point", r.URL.Path)
 	if r.FormValue("password") != "mikeiscool" {
+		log.Printf("You have not entered the correct password")
 		return
 	}
 
-	log.Printf("Entering %s DELETE end point", r.URL.Path)
 	w.Header().Set("Content-Type", "application/txt")
 	w.WriteHeader(http.StatusOK)
 	params := mux.Vars(r)
@@ -117,12 +118,38 @@ func DeleteAssignment(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateAssignment(w http.ResponseWriter, r *http.Request) {
+	//got some help on this part from Aram. Not sure if it actually works right though but I have to go now
 	log.Printf("Entering %s end point", r.URL.Path)
 	w.Header().Set("Content-Type", "application/json")
 
 	var response Response
 	response.Assignments = Assignments
+	r.ParseForm()
 
+	if r.FormValue("password") != "mikeiscool" {
+		log.Printf("FAIL: incorrect or missing key!")
+		w.WriteHeader(http.StatusBadRequest)
+		response := make(map[string]string)
+		response["status"] = "Wrong or missing key value"
+		jsonResponse, err := json.Marshal(response)
+		if err != nil {
+			return
+		}
+		w.Write(jsonResponse)
+		return
+	}
+
+	DeleteAssignment(w, r)
+	var updated Assignment
+	if r.FormValue("id") != "" {
+		updated.Id, _ = strconv.Atoi(r.FormValue("id"))
+		updated.Title = r.FormValue("title")
+		updated.Description = r.FormValue("desc")
+		updated.Points, _ = strconv.Atoi(r.FormValue("points"))
+		Assignments = append(Assignments, updated)
+		w.WriteHeader(http.StatusCreated)
+	}
+	w.WriteHeader(http.StatusNotFound)
 }
 
 func CreateAssignment(w http.ResponseWriter, r *http.Request) {

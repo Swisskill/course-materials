@@ -13,3 +13,29 @@ https://github.com/Swisskill/course-materials
 
 Did a get, then posted with the same id(it did not post), posted with a different id(worked), deleted without putting
 in the password(did not work), deleted with the password(worked), checked status with a get
+
+2022/03/11 09:54:22 starting API server
+2022/03/11 09:54:22 creating routes
+2022/03/11 09:54:33 Entering /assignments end point
+2022/03/11 09:55:03 Entering /api-status end point
+2022/03/11 09:55:28 Entering /assignments end point
+2022/03/11 09:55:35 Entering /assignment/841 end point
+2022/03/11 09:56:01 Entering /assignment/841 DELETE end point
+2022/03/11 09:57:27 Entering /assignments end point
+2022/03/11 09:58:58 Entering /assignments end point
+exit status 0xc000013a
+
+Did a few of the others
+
+2022/03/11 10:00:39 starting API server
+2022/03/11 10:00:39 creating routes
+2022/03/11 10:00:52 Entering /assignments end point
+2022/03/11 10:01:06 http: superfluous response.WriteHeader call from wyoassign/wyoassign.CreateAssignment (wyoassign.go:179)
+2022/03/11 10:01:55 Entering /assignment end point
+2022/03/11 10:01:55 Entering /assignment DELETE end point
+2022/03/11 10:01:55 http: superfluous response.WriteHeader call from wyoassign/wyoassign.UpdateAssignment (wyoassign.go:149)
+2022/03/11 10:01:55 http: superfluous response.WriteHeader call from wyoassign/wyoassign.UpdateAssignment (wyoassign.go:151)
+2022/03/11 10:02:13 Entering /assignments end point
+exit status 0xc000013a
+
+did the update and whatnot
