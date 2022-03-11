@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	//"main"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
 
+	//"main/main"
 	"github.com/gorilla/mux"
 )
 
@@ -82,6 +85,13 @@ func GetAssignment(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteAssignment(w http.ResponseWriter, r *http.Request) {
+	//if main.Pass != "mikeiscool" {
+	//	return
+	//} //this should implement a password function. Hopefully
+	if r.FormValue("password") != "mikeiscool" {
+		return
+	}
+
 	log.Printf("Entering %s DELETE end point", r.URL.Path)
 	w.Header().Set("Content-Type", "application/txt")
 	w.WriteHeader(http.StatusOK)
@@ -131,24 +141,7 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 	// Possible TODO: Better Error Checking!
 	// Possible TODO: Better Logging
 	if r.FormValue("id") != "" {
-		/*
-			for {
-				tmp := false
-				rand.Seed(time.Now().UnixNano())
-				randId := rand.Intn(1024)
-				for _, assign := range Assignments {
-					if assign.Id == randId {
-						tmp = true
-					}
-				}
-				if tmp != true {
-					break
-				}
-			}
-		*/
-		//params := mux.Vars(r)
 
-		//assignmnet.Id = r.FormValue("id")
 		//forming, _ := strconv.Atoi(r.FormValue("id")) //this line is stupid. Maybe it means the lines above don't work idk
 		assignmnet.Id, _ = strconv.Atoi(r.FormValue("id"))
 		assignmnet.Title = r.FormValue("title")
