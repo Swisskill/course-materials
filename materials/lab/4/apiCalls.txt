@@ -1,0 +1,15 @@
+
+https://github.com/Swisskill/course-materials
+
+2022/03/11 09:35:35 starting API server
+2022/03/11 09:35:35 creating routes
+2022/03/11 09:35:52 Entering /assignments end point
+2022/03/11 09:36:34 Sorry. Choose a different id please
+2022/03/11 09:36:40 http: superfluous response.WriteHeader call from wyoassign/wyoassign.CreateAssignment (wyoassign.go:153)
+2022/03/11 09:36:48 Entering /assignments end point
+2022/03/11 09:37:04 Entering /assignments end point
+2022/03/11 09:37:20 Entering /assignment/135 DELETE end point
+2022/03/11 09:37:27 Entering /assignments end point
+
+Did a get, then posted with the same id(it did not post), posted with a different id(worked), deleted without putting
+in the password(did not work), deleted with the password(worked), checked status with a get
