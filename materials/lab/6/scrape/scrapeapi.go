@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -74,6 +75,30 @@ func walkFn(w http.ResponseWriter) filepath.WalkFunc {
 
 func walkFn2(w http.ResponseWriter, query string) filepath.WalkFunc {
 	return func(path string, f os.FileInfo, err error) error {
+		w.Header().Set("Content-Type", "application/json")
+		r := regexp.MustCompile(`(?i)` + query)
+		if r.MatchString(path) { //since this is repeated, you could probably put this in a function
+			var tfile FileInfo
+			dir, filename := filepath.Split(path)
+			tfile.Filename = string(filename)
+			tfile.Location = string(dir)
+
+			Files = append(Files, tfile)
+
+			if w != nil && len(Files) > 0 {
+
+				//TODO_6: The current key value is the LEN of Files (this terrible);
+				//TODO_6: Create some variable to track how many files have been added
+				w.Write([]byte(`"` + (strconv.FormatInt(int64(len(Files)), 10)) + `":  `))
+				json.NewEncoder(w).Encode(tfile)
+				w.Write([]byte(`,`))
+
+			}
+
+			log.Printf("[+] HIT: %s\n", path)
+
+		}
+
 		return nil
 
 	}
@@ -107,7 +132,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	//TODO_8 - Write out something better than this that describes what this api does
 
-	fmt.Fprintf(w, "<html><body><H1>Welcome to my awesome File page</H1></body>")
+	fmt.Fprintf(w, htm)
 }
 
 func FindFile(w http.ResponseWriter, r *http.Request) {
@@ -141,7 +166,7 @@ func IndexFiles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	location, locOK := r.URL.Query()["location"]
-
+	regex, regexOK := r.URL.Query()["location"]
 	//TODO_10: Currently there is a huge risk with this code ... namely, we can search from the root /
 	//TODO_10: Assume the location passed starts at /home/ (or in Windows pick some "safe?" location)
 	//TODO_10: something like ...  rootDir string := "???"
@@ -167,14 +192,16 @@ func IndexFiles(w http.ResponseWriter, r *http.Request) {
 	// Hint, you need to grab the regex parameter (see how it's done for location above...)
 	//11 requires 7
 
-	// if regexOK
-	//   call filepath.Walk(location[0], walkFn2(w, `(i?)`+regex[0]))
-	// else run code to locate files matching stored regular expression
-	if err := filepath.Walk(location[0], walkFn(w)); err != nil { //w happens to be the http response writer
-		//this is also where todo 10 would be so that you can't search from the root
-
-		log.Panicln(err)
+	if regexOK {
+		filepath.Walk(location[0], walkFn2(w, `(i?)`+regex[0]))
+	} else {
+		filepath.Walk(location[0], walkFn(w)) //ATTN: still needs to make sure it's not the root
+		//this is the old one
 	}
+	//if err := filepath.Walk(location[0], walkFn(w)); err != nil { //w happens to be the http response writer
+	//this is also where todo 10 would be so that you can't search from the root
+
+	//	log.Panicln(err)
 
 	//wrapper to make "nice json"
 	w.Write([]byte(` "status": "completed"} `))
@@ -218,3 +245,20 @@ func AddRex(w http.ResponseWriter, r *http.Request) {
 // params["regex"] should contain your string that you pass to addRegEx
 // If you try to pass in (?i) on the command line you'll likely encounter issues
 // Suggestion : prepend (?i) to the search query in this endpoint
+const htm = `<html>    
+<head>      
+   <title>Hacking Your Computer</title>    
+</head>    
+<body>      
+   <h1 style="font-family:Consolas;color:red;font-size:40px;">       Welcome to the page devoted to hacking yourself!</h1>      
+   <p style="font-family:Courier New; color:blue;font-size:18px;">Hacking your computer is as simple as these few commands.
+   Basically, the following instructions will allow you view your own files. The commands available are: </p> 
+   <p style="font-family:Courier New; color:white;font-size:20px;">/api-status </p>
+   <p style="font-family:Courier New; color:white;font-size:20px;">/indexer </p>
+   <p style="font-family:Courier New; color:white;font-size:20px;">/search </p>
+   <p style="font-family:Courier New; color:white;font-size:20px;">/addsearch/{regex} </p>
+   <p style="font-family:Courier New; color:white;font-size:20px;">/clear </p>
+   <p style="font-family:Courier New; color:white;font-size:20px;">/reset </p>
+      
+</body>
+</html>`

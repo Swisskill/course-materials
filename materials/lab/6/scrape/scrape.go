@@ -38,8 +38,9 @@ func resetRegEx() {
 	}
 }
 
+//TODO_15 - Validate that this works as expected and doesn't cause issues
 func clearRegEx() {
-	//TODO_15 - Validate that this works as expected and doesn't cause issues
+	//todo15 is done
 	regexes = nil //this sets the regexes to nil. basically clears it
 }
 
