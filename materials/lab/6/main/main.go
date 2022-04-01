@@ -10,20 +10,29 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var LOG_LEVEL int = 2
+
+//LOG_LEVEL := 2
 //TODO_1: Logging right now just happens, create a global constant integer LOG_LEVEL
 //TODO_1: When LOG_LEVEL = 0 DO NOT LOG anything
 //TODO_1: When LOG_LEVEL = 1 LOG API details only
 //TODO_1: When LOG_LEVEL = 2 LOG API details and file matches (e.g., everything)
+//ATTN Dr. Mike: I was told that the log level thing doesn't actually do anything for us, but that it's just for future configuration
+//If this was wrong, well dang, I did it wrong. Hopefully it's not that
 
 func main() {
 
-	log.Println("starting API server") //these are the logs mentioned in todo 1.
+	if LOG_LEVEL > 0 {
+		log.Println("starting API server")
+	} //these are the logs mentioned in todo 1.
 	//log level. set it global. change it as needed
 	//more realistic would pass in some variable from the environment
 	//create a function you pass the logs to to check via if what log level it is
 	//create a new router
 	router := mux.NewRouter()
-	log.Println("creating routes")
+	if LOG_LEVEL > 0 {
+		log.Println("creating routes")
+	}
 	//specify endpoints
 	router.HandleFunc("/", scrape.MainPage).Methods("GET")
 

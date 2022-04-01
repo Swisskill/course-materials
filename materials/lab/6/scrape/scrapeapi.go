@@ -15,6 +15,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var LOG_LEVEL int = 2
+
 //==========================================================================\\
 
 // Helper function walk function, modfied from Chap 7 BHG to enable passing in of
@@ -36,17 +38,16 @@ func walkFn(w http.ResponseWriter) filepath.WalkFunc {
 				//TODO_5: As it currently stands the same file can be added to the array more than once
 				//TODO_5: Prevent this from happening by checking if the file AND location already exist as a single record
 				/*
-					                flag := false
-									for i, _ := range Files {
-										if tfile == Files[i] {
-											flag = true
-										}
-									}
-									if flag != true {
-										Files = append(Files, tfile) //this is number 5. this line is what appends the tfile to the Files
-									}
+					flag := false
+					for i, _ := range Files {
+						if tfile == Files[i] {
+							flag = true
+						}
+					}
+					if flag != true {
+						Files = append(Files, tfile) //this is number 5. this line is what appends the tfile to the Files
+					}
 				*/
-
 				if w != nil && len(Files) > 0 {
 
 					//TODO_6: The current key value is the LEN of Files (this terrible);
@@ -56,9 +57,9 @@ func walkFn(w http.ResponseWriter) filepath.WalkFunc {
 					w.Write([]byte(`,`))
 
 				}
-
-				log.Printf("[+] HIT: %s\n", path)
-
+				if LOG_LEVEL > 0 {
+					log.Printf("[+] HIT: %s\n", path)
+				}
 			}
 
 		}
@@ -75,15 +76,12 @@ func walkFn(w http.ResponseWriter) filepath.WalkFunc {
 
 func walkFn2(w http.ResponseWriter, query string) filepath.WalkFunc {
 	return func(path string, f os.FileInfo, err error) error {
-		w.Header().Set("Content-Type", "application/json")
-		r := regexp.MustCompile(`(?i)` + query)
-		if r.MatchString(path) { //since this is repeated, you could probably put this in a function
+		r := regexp.MustCompile(`(?i` + query)
+		if r.MatchString(path) {
 			var tfile FileInfo
 			dir, filename := filepath.Split(path)
 			tfile.Filename = string(filename)
 			tfile.Location = string(dir)
-
-			Files = append(Files, tfile)
 
 			if w != nil && len(Files) > 0 {
 
@@ -94,21 +92,20 @@ func walkFn2(w http.ResponseWriter, query string) filepath.WalkFunc {
 				w.Write([]byte(`,`))
 
 			}
-
-			log.Printf("[+] HIT: %s\n", path)
-
+			if LOG_LEVEL > 0 {
+				log.Printf("[+] HIT: %s\n", path)
+			}
 		}
-
 		return nil
-
 	}
 }
 
 //==========================================================================\\
 
 func APISTATUS(w http.ResponseWriter, r *http.Request) {
-
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{ "status" : "API is up and running ",`))
@@ -121,12 +118,16 @@ func APISTATUS(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(` "regexs" :`))
 	json.NewEncoder(w).Encode(regexstrings)
 	w.Write([]byte(`}`))
-	log.Println(regexes)
+	if LOG_LEVEL > 0 {
+		log.Println(regexes)
+	}
 
 }
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "text/html")
 
 	w.WriteHeader(http.StatusOK)
@@ -136,13 +137,16 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func FindFile(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	q, ok := r.URL.Query()["q"]
 
 	w.WriteHeader(http.StatusOK)
 	if ok && len(q[0]) > 0 {
-		log.Printf("Entering search with query=%s", q[0])
-
+		if LOG_LEVEL > 0 {
+			log.Printf("Entering search with query=%s", q[0])
+		}
 		// ADVANCED: Create a function in scrape.go that returns a list of file locations; call and use the result here
 		// e.g., func finder(query string) []string { ... }
 
@@ -162,11 +166,13 @@ func FindFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func IndexFiles(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "application/json")
 
 	location, locOK := r.URL.Query()["location"]
-	regex, regexOK := r.URL.Query()["location"]
+	reger, regerOk := r.URL.Query()["regex"]
 	//TODO_10: Currently there is a huge risk with this code ... namely, we can search from the root /
 	//TODO_10: Assume the location passed starts at /home/ (or in Windows pick some "safe?" location)
 	//TODO_10: something like ...  rootDir string := "???"
@@ -192,16 +198,22 @@ func IndexFiles(w http.ResponseWriter, r *http.Request) {
 	// Hint, you need to grab the regex parameter (see how it's done for location above...)
 	//11 requires 7
 
-	if regexOK {
-		filepath.Walk(location[0], walkFn2(w, `(i?)`+regex[0]))
-	} else {
-		filepath.Walk(location[0], walkFn(w)) //ATTN: still needs to make sure it's not the root
-		//this is the old one
-	}
+	// if regexOK
+	//   call filepath.Walk(location[0], walkFn2(w, `(i?)`+regex[0]))
+	// else run code to locate files matching stored regular expression
 	//if err := filepath.Walk(location[0], walkFn(w)); err != nil { //w happens to be the http response writer
 	//this is also where todo 10 would be so that you can't search from the root
 
 	//	log.Panicln(err)
+	//}
+	//direct := `Users\`
+	if regerOk {
+		//log.Printf("walkfn2")
+		filepath.Walk(location[0], walkFn2(w, reger[0]))
+	} else {
+		//log.Printf("walk")
+		filepath.Walk(location[0], walkFn(w))
+	}
 
 	//wrapper to make "nice json"
 	w.Write([]byte(` "status": "completed"} `))
@@ -212,7 +224,9 @@ func IndexFiles(w http.ResponseWriter, r *http.Request) {
 //TODO_12 Make sure to connect the name of your function back to the reset endpoint main.go!
 //todo12
 func ResetRex(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	resetRegEx()
 	Files = nil
@@ -220,14 +234,18 @@ func ResetRex(w http.ResponseWriter, r *http.Request) {
 
 //todo13
 func ClearRex(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	clearRegEx()
 }
 
 //todo14
 func AddRex(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Entering %s end point", r.URL.Path)
+	if LOG_LEVEL > 0 {
+		log.Printf("Entering %s end point", r.URL.Path)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	//params["regex"]
@@ -249,7 +267,7 @@ const htm = `<html>
 <head>      
    <title>Hacking Your Computer</title>    
 </head>    
-<body>      
+<body style="background-color:black;">      
    <h1 style="font-family:Consolas;color:red;font-size:40px;">       Welcome to the page devoted to hacking yourself!</h1>      
    <p style="font-family:Courier New; color:blue;font-size:18px;">Hacking your computer is as simple as these few commands.
    Basically, the following instructions will allow you view your own files. The commands available are: </p> 
