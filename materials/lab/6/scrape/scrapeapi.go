@@ -24,6 +24,7 @@ var LOG_LEVEL int = 2
 // if responsewriter is passed, outputs to http
 
 func walkFn(w http.ResponseWriter) filepath.WalkFunc {
+	var fCount int
 	return func(path string, f os.FileInfo, err error) error {
 		w.Header().Set("Content-Type", "application/json")
 		//for each regex, print it out
@@ -37,22 +38,23 @@ func walkFn(w http.ResponseWriter) filepath.WalkFunc {
 
 				//TODO_5: As it currently stands the same file can be added to the array more than once
 				//TODO_5: Prevent this from happening by checking if the file AND location already exist as a single record
-				/*
-					flag := false
-					for i, _ := range Files {
-						if tfile == Files[i] {
-							flag = true
-						}
+				flag := false
+
+				for i := range Files {
+					if tfile == Files[i] {
+						flag = true
 					}
-					if flag != true {
-						Files = append(Files, tfile) //this is number 5. this line is what appends the tfile to the Files
-					}
-				*/
+				}
+				if !flag {
+
+					Files = append(Files, tfile) //this is number 5. this line is what appends the tfile to the Files
+					fCount++
+				}
 				if w != nil && len(Files) > 0 {
 
 					//TODO_6: The current key value is the LEN of Files (this terrible);
 					//TODO_6: Create some variable to track how many files have been added
-					w.Write([]byte(`"` + (strconv.FormatInt(int64(len(Files)), 10)) + `":  `))
+					w.Write([]byte(`"` + (strconv.FormatInt(int64(fCount), 10)) + `":  `))
 					json.NewEncoder(w).Encode(tfile)
 					w.Write([]byte(`,`))
 
@@ -133,7 +135,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	//TODO_8 - Write out something better than this that describes what this api does
 
-	fmt.Fprintf(w, htm)
+	fmt.Fprintf(w, "<html><body><H1>Welcome to my awesome File page</H1></body>")
 }
 
 func FindFile(w http.ResponseWriter, r *http.Request) {
@@ -206,13 +208,13 @@ func IndexFiles(w http.ResponseWriter, r *http.Request) {
 
 	//	log.Panicln(err)
 	//}
-	//direct := `Users\`
+	direct := `/Users/wrbra/Desktop/COSC/Cyber`
 	if regerOk {
 		//log.Printf("walkfn2")
-		filepath.Walk(location[0], walkFn2(w, reger[0]))
+		filepath.Walk(direct+location[0], walkFn2(w, reger[0]))
 	} else {
 		//log.Printf("walk")
-		filepath.Walk(location[0], walkFn(w))
+		filepath.Walk(direct+location[0], walkFn(w))
 	}
 
 	//wrapper to make "nice json"
