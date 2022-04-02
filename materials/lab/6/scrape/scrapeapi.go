@@ -135,7 +135,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	//TODO_8 - Write out something better than this that describes what this api does
 
-	fmt.Fprintf(w, "<html><body><H1>Welcome to my awesome File page</H1></body>")
+	fmt.Fprintf(w, htm)
 }
 
 func FindFile(w http.ResponseWriter, r *http.Request) {
