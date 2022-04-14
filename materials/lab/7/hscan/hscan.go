@@ -69,15 +69,14 @@ func GenHashMaps(filename string) {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-
 	for scanner.Scan() {
 		password := scanner.Text()
-		go hash1 := fmt.Sprintf("%x", md5.Sum([]byte(password)))
-		go hash2 = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		
-
+		shalookup[password] = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+		md5lookup[password] = fmt.Sprintf("%x", md5.Sum([]byte(password)))
 	}
-
+	if err := scanner.Err(); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func GetSHA(hash string) (string, error) {
@@ -105,15 +104,40 @@ func GetMD5(hash string) (string, error) {
 	}
 }
 
+/*
+type SafeNumbers struct {
+	sync.RWMutex
+	numbers map[int]int
+}
+
+func (sn *SafeNumbers) Add(num int) {
+	sn.Lock()
+	defer sn.Unlock()
+	sn.numbers[num] = num
+}
+
+
+func (sn *SafeNumbers) Get(num int) (int, error) {
+	sn.RLock()
+	defer sn.RUnlock()
+	if number, ok := sn.numbers[num]; ok {
+		return number, nil
+	}
+	return 0, errors.New("Number does not exists")
+}
 
 func generateNumbersMap() {
 	wg := sync.WaitGroup{}
+    // Init our "safe" numbers map struct.
+	safeNumbers := &SafeNumbers{
+		numbers: map[int]int{},
+	}
     // Write.
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			numbers[i] = i
+			safeNumbers.Add(i)
 		}(i)
 	}
     // Read.
@@ -121,9 +145,15 @@ func generateNumbersMap() {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			log.Print(numbers[i])
+			number, err := safeNumbers.Get(i)
+			if err != nil {
+				log.Print(err)
+			} else {
+				log.Print(number)
+			}
 		}(i)
 	}
 
 	wg.Wait()
 }
+*/

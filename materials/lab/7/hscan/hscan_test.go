@@ -17,4 +17,5 @@ func TestGuessSingle(t *testing.T) {
 
 func TestGenHashMaps(t *testing.T) {
 	GenHashMaps("C:/Users/Will/Desktop/School/COSC/Cyber/course-materials/materials/lab/7/main/wordlist.txt")
+
 }
