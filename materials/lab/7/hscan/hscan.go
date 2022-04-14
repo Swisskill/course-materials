@@ -62,6 +62,22 @@ func GenHashMaps(filename string) {
 	//Test and record the time it takes to scan to generate these Maps
 	// 1. With and without using go subroutines
 	// 2. Compute the time per password (hint the number of passwords for each file is listed on the site...)
+	f, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+
+	for scanner.Scan() {
+		password := scanner.Text()
+		go hash1 := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+		go hash2 = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+		
+
+	}
+
 }
 
 func GetSHA(hash string) (string, error) {
@@ -76,7 +92,17 @@ func GetSHA(hash string) (string, error) {
 	}
 }
 
-//TODO
+//TODO done?
 func GetMD5(hash string) (string, error) {
-	return "", errors.New("not implemented")
+	password, ok := md5lookup[hash]
+	if ok {
+		return password, nil
+
+	} else {
+
+		return "", errors.New("password does not exist")
+
+	}
 }
+
+

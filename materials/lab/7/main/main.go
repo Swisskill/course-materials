@@ -20,7 +20,7 @@ func main() {
 
 	//TODO Grab the file to use from the command line instead; look at previous lab (e.g., #3 ) for examples of grabbing info from command line
 	var file string
-	fmt.Println("Tread Cautiously:\n Enter in the file")
+	fmt.Println("Tread Cautiously:\nEnter in the file")
 	fmt.Scanln(&file)
 	fmt.Println()
 	hscan.GuessSingle(md5hash, file)
