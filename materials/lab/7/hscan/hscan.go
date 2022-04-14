@@ -106,3 +106,24 @@ func GetMD5(hash string) (string, error) {
 }
 
 
+func generateNumbersMap() {
+	wg := sync.WaitGroup{}
+    // Write.
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			numbers[i] = i
+		}(i)
+	}
+    // Read.
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			log.Print(numbers[i])
+		}(i)
+	}
+
+	wg.Wait()
+}
