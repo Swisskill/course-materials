@@ -32,13 +32,13 @@ func GuessSingle(sourceHash string, filename string) string {
 		// add a check and logicial structure
 
 		hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
-		if hash == sourceHash {
+		if len(hash) == 32 {
 			fmt.Printf("[+] Password found (MD5): %s\n", password)
 			return password
 		}
 
 		hash = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		if hash == sourceHash {
+		if len(hash) == 64 {
 			fmt.Printf("[+] Password found (SHA-256): %s\n", password)
 			return password
 		}
@@ -71,6 +71,9 @@ func GenHashMaps(filename string) {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		password := scanner.Text()
+		fmt.Printf("%x", sha256.Sum256([]byte(password)))
+		fmt.Println()
+		fmt.Printf("%x", md5.Sum([]byte(password)))
 		shalookup[password] = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 		md5lookup[password] = fmt.Sprintf("%x", md5.Sum([]byte(password)))
 	}
