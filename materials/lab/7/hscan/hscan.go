@@ -52,7 +52,7 @@ func GuessSingle(sourceHash string, filename string) string {
 
 func GenHashMaps(filename string) {
 
-	//TODO
+	//TODO DONE
 	//itterate through a file (look in the guessSingle function above)
 	//rather than check for equality add each hash:passwd entry to a map SHA and MD5 where the key = hash and the value = password
 	//TODO at the very least use go subroutines to generate the sha and md5 hashes at the same time
@@ -102,7 +102,7 @@ func GetSHA(hash string) (string, error) {
 	}
 }
 
-//TODO
+//TODO DONE
 func GetMD5(hash string) (string, error) {
 	password, ok := md5lookup[hash]
 	if ok {
