@@ -50,7 +50,7 @@ func GuessSingle(sourceHash string, filename string) string {
 	return "nil"
 }
 
-func GenHashMaps(filename string) {
+func GenHashMaps(filename string) (int, int) {
 
 	//TODO DONE
 	//itterate through a file (look in the guessSingle function above)
@@ -79,14 +79,14 @@ func GenHashMaps(filename string) {
 		password := scanner.Text()
 		shalookup[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 		md5lookup[fmt.Sprintf("%x", md5.Sum([]byte(password)))] = password       //fmt.Sprintf("%x", md5.Sum([]byte(password)))
+
 	}
+	r1 := len(md5lookup)
+	r2 := len(shalookup)
 	if err := scanner.Err(); err != nil {
 		log.Fatalln(err)
 	}
-
-	//for _, m := range shalookup {
-	//	fmt.Printf("Md5: %s\n", m)
-	//}
+	return r1, r2
 }
 
 func GetSHA(hash string) (string, error) {
@@ -120,13 +120,16 @@ type SafeNumbers struct {
 	sync.RWMutex
 	numbers map[int]int
 }
+To be able to read and write items concurrently to this structure, we need to create the responsible methods:
 
 func (sn *SafeNumbers) Add(num int) {
 	sn.Lock()
 	defer sn.Unlock()
 	sn.numbers[num] = num
 }
+Here we are basically telling to lock the numbers map, during adding of the new number to it. Other goroutines will wait until it became unlocked again.
 
+And another method for reading:
 
 func (sn *SafeNumbers) Get(num int) (int, error) {
 	sn.RLock()
@@ -136,6 +139,7 @@ func (sn *SafeNumbers) Get(num int) (int, error) {
 	}
 	return 0, errors.New("Number does not exists")
 }
+Next, let’s refactor our generateNumbersMap() function:
 
 func generateNumbersMap() {
 	wg := sync.WaitGroup{}
@@ -166,5 +170,8 @@ func generateNumbersMap() {
 	}
 
 	wg.Wait()
+}
+
+
 }
 */
