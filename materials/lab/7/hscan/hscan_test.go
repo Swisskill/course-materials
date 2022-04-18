@@ -20,7 +20,13 @@ func TestGenHashMaps(t *testing.T) {
 	if jimothy != 303868 || ward != 303868 {
 		t.Errorf("got %d and %d but wanted 303872", jimothy, ward)
 	}
+}
 
+func TestGenHashMapsC(t *testing.T) {
+	jimothy, ward := GenHashMapsC("C:/Users/Will/Desktop/School/COSC/Cyber/course-materials/materials/lab/7/main/toplist.txt")
+	if jimothy != 303868 || ward != 303868 {
+		t.Errorf("got %d and %d but wanted 303872", jimothy, ward)
+	}
 }
 
 func TestSuite(t *testing.T) {

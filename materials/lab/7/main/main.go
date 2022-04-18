@@ -42,9 +42,11 @@ func main() {
 		tuiHash2 = drmike2
 		hscan.GuessSingle(tuiHash1, file)
 		hscan.GuessSingle(tuiHash2, file)
-		hscan.GenHashMaps(file)
-		fmt.Println(hscan.GetSHA(drmike2))
-		fmt.Println(hscan.GetMD5(drmike1))
+		//hscan.GenHashMaps(file)
+		hscan.GenHashMapsC(file)
+		fmt.Println(hscan.GetSHAC(drmike2))
+		//fmt.Println(hscan.GetSHA(drmike2))
+		//fmt.Println(hscan.GetMD5(drmike1))
 		fmt.Println("-----------------------")
 		fmt.Printf("Time elapsed: %s\n", time.Since(start))
 

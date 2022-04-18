@@ -8,12 +8,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 )
 
-//==========================================================================\\
+//==========================================================================//
 
 var shalookup map[string]string
 var md5lookup map[string]string
+var shaGo sync.Map
+var md5Go sync.Map
+var shaCount = 0
+var md5Count = 0
 
 func GuessSingle(sourceHash string, filename string) string {
 
@@ -28,26 +33,62 @@ func GuessSingle(sourceHash string, filename string) string {
 	for scanner.Scan() {
 		password := scanner.Text()
 
-		// TODO - From the length of the hash you should know which one of these to check ...
+		// TODO DONE- From the length of the hash you should know which one of these to check ...
 		// add a check and logicial structure
-
-		hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
-		if hash == sourceHash {
-			fmt.Printf("[+] Password found (MD5): %s\n", password)
-			return password
+		if len(sourceHash) == 32 {
+			hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+			if hash == sourceHash {
+				fmt.Printf("[+] Password found (MD5): %s\n", password)
+				return password
+			}
+		}
+		if len(sourceHash) == 64 {
+			hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+			if hash == sourceHash {
+				fmt.Printf("[+] Password found (SHA-256): %s\n", password)
+				return password
+			}
 		}
 
-		hash = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		if hash == sourceHash {
-			fmt.Printf("[+] Password found (SHA-256): %s\n", password)
-			return password
-		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatalln(err)
 	}
 	return "nil"
+}
+
+func GenHashMapsC(filename string) (int, int) {
+	f, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	var phore sync.WaitGroup
+	for scanner.Scan() {
+		password := scanner.Text()
+		phore.Add(2)
+		go shaHelp(password, &phore)
+		go md5Help(password, &phore)
+
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalln(err)
+	}
+	return shaCount, md5Count
+}
+func shaHelp(password string, phore1 *sync.WaitGroup) {
+	shaGo.Store(fmt.Sprintf("%x", sha256.Sum256([]byte(password))), password) //[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password))
+	shaCount++
+	phore1.Done()
+}
+func md5Help(password string, phore2 *sync.WaitGroup) {
+	md5Go.Store(fmt.Sprintf("%x", md5.Sum([]byte(password))), password) //[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password))
+	md5Count++
+	phore2.Done()
 }
 
 func GenHashMaps(filename string) (int, int) {
@@ -58,7 +99,7 @@ func GenHashMaps(filename string) (int, int) {
 	//TODO at the very least use go subroutines to generate the sha and md5 hashes at the same time
 	//OPTIONAL -- Can you use workers to make this even faster
 
-	//TODO create a test in hscan_test.go so that you can time the performance of your implementation
+	//TODO DONE create a test in hscan_test.go so that you can time the performance of your implementation
 	//Test and record the time it takes to scan to generate these Maps
 	// 1. With and without using go subroutines
 	// 2. Compute the time per password (hint the number of passwords for each file is listed on the site...)
@@ -104,6 +145,32 @@ func GetSHA(hash string) (string, error) {
 
 //TODO DONE
 func GetMD5(hash string) (string, error) {
+	password, ok := md5lookup[hash]
+	if ok {
+		returner := fmt.Sprintf("[+] From the general MD5 function: %s", password)
+		return returner, errors.New("")
+	} else {
+
+		return "", errors.New("password does not exist")
+
+	}
+}
+
+func GetSHAC(hash string) (string, error) {
+	password, ok := shaGo.Load(hash)
+	if ok {
+		returner := fmt.Sprintf("[+] From the general SHA function: %s", password)
+		return returner, errors.New("")
+
+	} else {
+
+		return "", errors.New("password does not exist")
+
+	}
+}
+
+//TODO DONE
+func GetMD5C(hash string) (string, error) {
 	password, ok := md5lookup[hash]
 	if ok {
 		returner := fmt.Sprintf("[+] From the general MD5 function: %s", password)
