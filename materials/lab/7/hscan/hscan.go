@@ -77,18 +77,23 @@ func GenHashMaps(filename string) {
 			md5lookup = make(map[string]string)
 		}
 		password := scanner.Text()
-		shalookup[password] = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		md5lookup[password] = fmt.Sprintf("%x", md5.Sum([]byte(password)))
+		shalookup[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+		md5lookup[fmt.Sprintf("%x", md5.Sum([]byte(password)))] = password       //fmt.Sprintf("%x", md5.Sum([]byte(password)))
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatalln(err)
 	}
+
+	//for _, m := range shalookup {
+	//	fmt.Printf("Md5: %s\n", m)
+	//}
 }
 
 func GetSHA(hash string) (string, error) {
 	password, ok := shalookup[hash]
 	if ok {
-		return password, nil
+		returner := fmt.Sprintf("[+] From the general SHA function: %s", password)
+		return returner, errors.New("")
 
 	} else {
 
@@ -97,12 +102,12 @@ func GetSHA(hash string) (string, error) {
 	}
 }
 
-//TODO done?
+//TODO
 func GetMD5(hash string) (string, error) {
 	password, ok := md5lookup[hash]
 	if ok {
-		return password, nil
-
+		returner := fmt.Sprintf("[+] From the general MD5 function: %s", password)
+		return returner, errors.New("")
 	} else {
 
 		return "", errors.New("password does not exist")
