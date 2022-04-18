@@ -16,11 +16,9 @@ func TestGuessSingle(t *testing.T) {
 }
 
 func TestGenHashMaps(t *testing.T) {
-	GenHashMaps("C:/Users/Will/Desktop/School/COSC/Cyber/course-materials/materials/lab/7/main/wordlist.txt")
-	got, _ := GetMD5("9701a1c165dd9420816bfec5edd6c2b1")
-	dontWant := ""
-	if got == dontWant {
-		t.Errorf("you failed the test for md5")
+	jimothy, ward := GenHashMaps("C:/Users/Will/Desktop/School/COSC/Cyber/course-materials/materials/lab/7/main/toplist.txt")
+	if jimothy != 303868 || ward != 303868 {
+		t.Errorf("got %d and %d but wanted 303872", jimothy, ward)
 	}
 
 }
