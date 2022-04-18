@@ -159,7 +159,7 @@ func GetMD5(hash string) (string, error) {
 func GetSHAC(hash string) (string, error) {
 	password, ok := shaGo.Load(hash)
 	if ok {
-		returner := fmt.Sprintf("[+] From the general SHA function: %s", password)
+		returner := fmt.Sprintf("[+] From the concurrent SHA function: %s", password)
 		return returner, errors.New("")
 
 	} else {
@@ -171,9 +171,9 @@ func GetSHAC(hash string) (string, error) {
 
 //TODO DONE
 func GetMD5C(hash string) (string, error) {
-	password, ok := md5lookup[hash]
+	password, ok := md5Go.Load(hash)
 	if ok {
-		returner := fmt.Sprintf("[+] From the general MD5 function: %s", password)
+		returner := fmt.Sprintf("[+] From the concurrent MD5 function: %s", password)
 		return returner, errors.New("")
 	} else {
 

@@ -26,9 +26,12 @@ func main() {
 	var tuiHash1 string
 	var tuiHash2 string
 	var preHash string
-	fmt.Println("Tread Cautiously:\nEnter in the file or type \"default\"")
+	fmt.Println("Tread Cautiously:\nEnter in a file, type\"default\", or type \"test\"")
 	fmt.Scanln(&preFile)
-	if preFile == "default" {
+	if preFile == "test" {
+		helper()
+		return
+	} else if preFile == "default" {
 		file = "toplist.txt"
 	} else {
 		file = preFile
@@ -42,11 +45,12 @@ func main() {
 		tuiHash2 = drmike2
 		hscan.GuessSingle(tuiHash1, file)
 		hscan.GuessSingle(tuiHash2, file)
-		//hscan.GenHashMaps(file)
+		hscan.GenHashMaps(file)
 		hscan.GenHashMapsC(file)
 		fmt.Println(hscan.GetSHAC(drmike2))
-		//fmt.Println(hscan.GetSHA(drmike2))
-		//fmt.Println(hscan.GetMD5(drmike1))
+		fmt.Println(hscan.GetMD5C(drmike1))
+		fmt.Println(hscan.GetSHA(drmike2))
+		fmt.Println(hscan.GetMD5(drmike1))
 		fmt.Println("-----------------------")
 		fmt.Printf("Time elapsed: %s\n", time.Since(start))
 
@@ -71,6 +75,37 @@ func main() {
 
 		}
 	}
+
+}
+
+func helper() {
+	file := "toplist.txt"
+	var drmike1 = "90f2c9c53f66540e67349e0ab83d8cd0"
+	var drmike2 = "1c8bfe8f801d79745c4631d09fff36c82aa37fc4cce4fc946683d7b336b63032"
+	total := time.Now()
+	//---------------------------------
+	single := time.Now()
+	hscan.GuessSingle(drmike1, file)
+	hscan.GuessSingle(drmike2, file)
+	singleE := time.Since(single)
+	//---------------------------------
+	gen := time.Now()
+	hscan.GenHashMaps(file)
+	fmt.Println(hscan.GetSHA(drmike2))
+	fmt.Println(hscan.GetMD5(drmike1))
+	genE := time.Since(gen)
+	//---------------------------------
+	con := time.Now()
+	hscan.GenHashMapsC(file)
+	fmt.Println(hscan.GetSHAC(drmike2))
+	fmt.Println(hscan.GetMD5C(drmike1))
+	conE := time.Since(con)
+	//----------------------------------
+	fmt.Println("---------------------------------")
+	fmt.Printf("Total Time Elapsed: %s\n", time.Since(total))
+	fmt.Printf("Single Guessing Time: %s\n", singleE)
+	fmt.Printf("Gen Hash Time: %s\n", genE)
+	fmt.Printf("Concurrent Hash Time: %s\n", conE)
 
 }
 
