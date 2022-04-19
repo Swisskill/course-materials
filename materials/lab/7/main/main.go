@@ -26,54 +26,63 @@ func main() {
 	var tuiHash1 string
 	var tuiHash2 string
 	var preHash string
-	fmt.Println("Tread Cautiously:\nEnter in a file, type\"default\", or type \"test\"")
-	fmt.Scanln(&preFile)
-	if preFile == "test" {
-		helper()
-		return
-	} else if preFile == "default" {
-		file = "toplist.txt"
-	} else {
-		file = preFile
-	}
-	fmt.Println("\nEnter in hash to scan or type \"default\"")
-	fmt.Scanln(&preHash)
-	fmt.Println()
-	if preHash == "default" {
-		start := time.Now()
-		tuiHash1 = drmike1
-		tuiHash2 = drmike2
-		hscan.GuessSingle(tuiHash1, file)
-		hscan.GuessSingle(tuiHash2, file)
-		hscan.GenHashMaps(file)
-		hscan.GenHashMapsC(file)
-		fmt.Println(hscan.GetSHAC(drmike2))
-		fmt.Println(hscan.GetMD5C(drmike1))
-		fmt.Println(hscan.GetSHA(drmike2))
-		fmt.Println(hscan.GetMD5(drmike1))
-		fmt.Println("-----------------------")
-		fmt.Printf("Time elapsed: %s\n", time.Since(start))
-
-	} else {
-		start := time.Now()
-		hscan.GuessSingle(preHash, file)
-		hscan.GenHashMaps(file)
-		if len(preHash) == 64 {
-			fmt.Println(hscan.GetSHA(preHash))
-			fmt.Println("-----------------------")
-			fmt.Printf("Time elapsed: %s\n", time.Since(start))
-
-		} else if len(preHash) == 32 {
-			fmt.Println(hscan.GetMD5(preHash))
-			fmt.Println("-----------------------")
-			fmt.Printf("Time elapsed: %s\n", time.Since(start))
-
-		} else {
-			fmt.Println("This was not a valid hash")
-			fmt.Println("-----------------------")
-			fmt.Printf("Time elapsed: %s\n", time.Since(start))
-
+	for i := 0; i < 1; i++ {
+		fmt.Println("You can break the cycle by typing \"break\" at any time")
+		fmt.Println("Tread Cautiously:\nEnter in a file, type\"default\", or type \"benchmark\"")
+		fmt.Scanln(&preFile)
+		if preFile == "break" {
+			break
 		}
+		if preFile == "benchmark" {
+			helper()
+		} else if preFile == "default" {
+			file = "toplist.txt"
+		} else {
+			file = preFile
+		}
+		if preFile != "benchmark" {
+			fmt.Println("\nEnter in hash to scan or type \"default\"")
+			fmt.Scanln(&preHash)
+			fmt.Println()
+			if preHash == "default" {
+				start := time.Now()
+				tuiHash1 = drmike1
+				tuiHash2 = drmike2
+				hscan.GuessSingle(tuiHash1, file)
+				hscan.GuessSingle(tuiHash2, file)
+				hscan.GenHashMaps(file)
+				hscan.GenHashMapsC(file)
+				fmt.Println(hscan.GetSHAC(drmike2))
+				fmt.Println(hscan.GetMD5C(drmike1))
+				fmt.Println(hscan.GetSHA(drmike2))
+				fmt.Println(hscan.GetMD5(drmike1))
+				fmt.Println("-----------------------")
+				fmt.Printf("Time elapsed: %s\n", time.Since(start))
+
+			} else {
+				start := time.Now()
+				hscan.GuessSingle(preHash, file)
+				hscan.GenHashMaps(file)
+				if len(preHash) == 64 {
+					fmt.Println(hscan.GetSHA(preHash))
+					fmt.Println("-----------------------")
+					fmt.Printf("Time elapsed: %s\n", time.Since(start))
+
+				} else if len(preHash) == 32 {
+					fmt.Println(hscan.GetMD5(preHash))
+					fmt.Println("-----------------------")
+					fmt.Printf("Time elapsed: %s\n", time.Since(start))
+
+				} else {
+					fmt.Println("This was not a valid hash")
+					fmt.Println("-----------------------")
+					fmt.Printf("Time elapsed: %s\n", time.Since(start))
+
+				}
+			}
+		}
+		fmt.Println("\nLet's give it another go\n-----------------------------\n-----------------------------")
+		i--
 	}
 
 }
