@@ -44,6 +44,9 @@ func main() {
 			fmt.Println("\nEnter in hash to scan or type \"default\"")
 			fmt.Scanln(&preHash)
 			fmt.Println()
+			if preHash == "break" {
+				break
+			}
 			if preHash == "default" {
 				start := time.Now()
 				tuiHash1 = drmike1
