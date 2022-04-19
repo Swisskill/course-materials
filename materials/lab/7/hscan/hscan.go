@@ -41,13 +41,14 @@ func GuessSingle(sourceHash string, filename string) string {
 				fmt.Printf("[+] Password found (MD5): %s\n", password)
 				return password
 			}
-		}
-		if len(sourceHash) == 64 {
+		} else if len(sourceHash) == 64 {
 			hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 			if hash == sourceHash {
 				fmt.Printf("[+] Password found (SHA-256): %s\n", password)
 				return password
 			}
+		} else {
+			return "not a valid hash bro"
 		}
 
 	}
@@ -58,6 +59,7 @@ func GuessSingle(sourceHash string, filename string) string {
 	return "nil"
 }
 
+//-----------------------------------------------------------
 func GenHashMapsC(filename string) (int, int) {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -80,29 +82,24 @@ func GenHashMapsC(filename string) (int, int) {
 	}
 	return shaCount, md5Count
 }
+
+//-----------------------
 func shaHelp(password string, phore1 *sync.WaitGroup) {
 	shaGo.Store(fmt.Sprintf("%x", sha256.Sum256([]byte(password))), password) //[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password))
 	shaCount++
 	phore1.Done()
 }
+
+//-----------------------
 func md5Help(password string, phore2 *sync.WaitGroup) {
 	md5Go.Store(fmt.Sprintf("%x", md5.Sum([]byte(password))), password) //[fmt.Sprintf("%x", sha256.Sum256([]byte(password)))] = password //fmt.Sprintf("%x", sha256.Sum256([]byte(password))
 	md5Count++
 	phore2.Done()
 }
 
+//-----------------------------------------------------------
+
 func GenHashMaps(filename string) (int, int) {
-
-	//TODO DONE
-	//itterate through a file (look in the guessSingle function above)
-	//rather than check for equality add each hash:passwd entry to a map SHA and MD5 where the key = hash and the value = password
-	//TODO at the very least use go subroutines to generate the sha and md5 hashes at the same time
-	//OPTIONAL -- Can you use workers to make this even faster
-
-	//TODO DONE create a test in hscan_test.go so that you can time the performance of your implementation
-	//Test and record the time it takes to scan to generate these Maps
-	// 1. With and without using go subroutines
-	// 2. Compute the time per password (hint the number of passwords for each file is listed on the site...)
 	f, err := os.Open(filename)
 	if err != nil {
 		log.Fatalln(err)
@@ -181,6 +178,18 @@ func GetMD5C(hash string) (string, error) {
 
 	}
 }
+
+//this right here is for the gen hash map function
+//TODO DONE
+//itterate through a file (look in the guessSingle function above)
+//rather than check for equality add each hash:passwd entry to a map SHA and MD5 where the key = hash and the value = password
+//TODO at the very least use go subroutines to generate the sha and md5 hashes at the same time
+//OPTIONAL -- Can you use workers to make this even faster
+
+//TODO DONE create a test in hscan_test.go so that you can time the performance of your implementation
+//Test and record the time it takes to scan to generate these Maps
+// 1. With and without using go subroutines
+// 2. Compute the time per password (hint the number of passwords for each file is listed on the site...)
 
 /*
 type SafeNumbers struct {
